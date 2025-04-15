@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Uploader</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Upload Your Resume</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Display the Job Description here -->
+    <h2>Job Description</h2>
+    <pre>{{ job_description }}</pre>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="resume" required>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+

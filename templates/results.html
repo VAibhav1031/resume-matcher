@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Matches</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Matching Resumes</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Filename</th>
+                <th>Similarity Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resume in matched_resumes %}
+            <tr>
+                <td>{{ resume.filename }}</td>
+                <td>{{ resume.score }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/">Upload another resume</a>
+</body>
+</html>
+
