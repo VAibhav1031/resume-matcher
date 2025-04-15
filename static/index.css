@@ -1,0 +1,108 @@
+/* ===== INDEX PAGE SPECIFIC ===== */
+.header-card {
+    text-align: center;
+    border-top: 4px solid var(--primary);
+    padding: 3rem 2rem;
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.input-toggle {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.input-toggle label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.input-toggle input[type="radio"] {
+    width: 1.3em;
+    height: 1.3em;
+    accent-color: var(--primary);
+}
+
+#jobTextContainer textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 1.1rem;
+    resize: vertical;
+    background: var(--primary-light);
+    transition: all 0.3s ease;
+    line-height: 1.8;
+}
+
+#jobTextContainer textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
+    outline: none;
+}
+
+.file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+    margin: 2rem 0;
+}
+
+.file-input-button {
+    border: 2px dashed rgba(0, 86, 179, 0.3);
+    color: var(--primary);
+    background-color: var(--primary-light);
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.file-input-button:hover {
+    background-color: rgba(0, 86, 179, 0.1);
+    border-color: rgba(0, 86, 179, 0.5);
+}
+
+/* Results Preview */
+.results-preview {
+    margin-top: 3rem;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.results-preview h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.preview-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.preview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
