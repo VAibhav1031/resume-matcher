@@ -227,3 +227,81 @@ button:hover {
     background-color: #218838;
 }
 
+
+
+/* existing styles probably here */
+
+
+/* 👇 added for the modal overlay that appear on top of page when delete clicked */
+.modal {
+    display: none; /* by default hide it */
+    position: fixed;
+    z-index: 1000; /* show above all */
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* black transparent overlay */
+}
+
+/* 👇 this is white box inside modal */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto; /* push it from top and center horizontally */
+    padding: 20px;
+    width: 300px;
+    border-radius: 10px; /* little curve edge */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3); /* soft shadow */
+    text-align: center;
+}
+
+/* 👇 for the cancel button in modal, it look different from danger one */
+.btn-secondary {
+    background-color: #6c757d; /* grayish look */
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px; /* lil space from delete button */
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* 👇 showing upload time and job add time style - small text */
+.upload-time,
+.job-time {
+    font-size: 0.85rem; /* smaller text than normal */
+    color: #777; /* gray text */
+    margin-top: 4px;
+}
+
+/* ✅ if not already exist, we can also make delete button stand out */
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-danger:hover {
+    background-color: #c82333; /* little darker on hover */
+}
+
+/* 👇 optional: make download button nicer */
+.download-btn {
+    display: inline-block;
+    margin-top: 8px;
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+.download-btn:hover {
+    background-color: #0056b3;
+}
+

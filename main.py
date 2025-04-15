@@ -7,7 +7,13 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.secret_key = "supersecret"
-app.config["UPLOAD_FOLDER"] = "uploads"
+
+# ✅ Uploads now go inside static/uploads for easier serving
+app.config["UPLOAD_FOLDER"] = os.path.join("static", "uploads")
+
+# ✅ Make sure the folder exists so saving doesn't throw error
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB max upload
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///matcher.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -81,6 +87,8 @@ def upload_resume():
 
     if file and allowed_file(file.filename):
         filename = file.filename
+
+        # ✅ Updated to save in static/uploads/
         save_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(save_path)
 
