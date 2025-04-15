@@ -9,7 +9,10 @@ class JobDescription(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    resumes = db.relationship("Resume", backref="job", lazy=True)
+    # Adding cascade="all, delete-orphan" to handle deletion of associated resumes
+    resumes = db.relationship(
+        "Resume", backref="job", lazy=True, cascade="all, delete-orphan"
+    )
 
 
 class Resume(db.Model):

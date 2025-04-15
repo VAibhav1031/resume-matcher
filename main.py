@@ -3,6 +3,7 @@ from matcher.models import db, JobDescription, Resume
 import os
 from matcher.resume_utils import extract_text
 from matcher.job_matcher import match_resume_to_job
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.secret_key = "supersecret"
@@ -12,7 +13,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///matcher.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
-
+migrate = Migrate(app, db)
 ALLOWED_EXTENSIONS = {"pdf", "docx"}
 
 
