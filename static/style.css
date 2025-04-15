@@ -1,82 +1,194 @@
-body {
-    font-family: Arial, sans-serif;
+/* General Reset */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    box-sizing: border-box;
 }
 
-h1, h2 {
-    text-align: center;
+/* Body & Layout */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
     color: #333;
+    line-height: 1.6;
 }
 
-form {
-    margin-top: 1rem;
-    background: #fff;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    max-width: 400px;
-    margin: 20px auto;
-}
-
-input[type="file"] {
-    margin-bottom: 1rem;
-    width: 100%;
-}
-
-button {
-    padding: 0.5rem 1rem;
-    background-color: #4CAF50;
+.navbar {
+    background-color: #0056b3;
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-.flash-messages {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.flash-messages li {
-    background-color: #ffeeba;
-    padding: 0.5rem;
-    border-left: 5px solid #ffc107;
-    margin-bottom: 0.5rem;
-}
-
-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+.navbar i {
+    margin-right: 10px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+    margin-bottom: 40px;
+}
+
+h2 {
+    font-size: 1.6em;
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+h2 i {
+    margin-right: 10px;
+    color: #0056b3;
+}
+
+input[type="file"], textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+input[type="file"]:hover, textarea:hover {
+    border-color: #0056b3;
+}
+
+button {
+    background-color: #0056b3;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+button i {
+    margin-right: 8px;
+}
+
+button:hover {
+    background-color: #003d82;
+}
+
+/* Flash Messages */
+.flash-messages {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.flash-messages li {
+    background-color: #ffcc00;
     padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
     text-align: center;
-    border: 1px solid #ddd;
 }
 
-th {
-    background-color: #f2f2f2;
+.flash-messages li.success {
+    background-color: #28a745;
 }
 
-a {
-    display: block;
-    text-align: center;
-    margin-top: 1rem;
-    font-weight: bold;
-    color: #4CAF50;
+.flash-messages li.error {
+    background-color: #dc3545;
+}
+
+/* Form Sections */
+.input-toggle {
+    margin-bottom: 20px;
+}
+
+.input-toggle label {
+    font-size: 1.2em;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+/* Icons and Text */
+textarea {
+    height: 150px;
+}
+
+#jobFileForm {
+    display: none;
+}
+
+/* Hover Animation */
+button {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .section h2 {
+        font-size: 1.4em;
+    }
+
+    button {
+        font-size: 0.9em;
+        padding: 10px 15px;
+    }
+
+    input[type="file"], textarea {
+        font-size: 0.9em;
+    }
+}
+
+
+/* Animation for showing/hiding forms */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+#jobTextForm, #jobFileForm {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Apply fade out animation when the form is hidden */
+#jobTextForm[style="display: none;"], #jobFileForm[style="display: none;"] {
+    animation: fadeOut 0.5s ease-in-out;
 }
 

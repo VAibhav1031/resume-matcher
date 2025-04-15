@@ -1,33 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Resume Uploader</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matcher</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-    <h1>Upload Your Job Description and Resume</h1>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-briefcase"></i>
+            Resume Matcher
+        </div>
+    </nav>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class="flash-messages">
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
 
-    <!-- Job Description Upload Form -->
-    <form action="/upload_job" method="post">
-        <textarea name="job_description" rows="10" cols="50" required placeholder="Enter or paste job description here"></textarea>
-        <button type="submit">Upload Job Description</button>
-    </form>
+        <div class="section">
+            <h2><i class="fas fa-file-alt"></i> Upload Job Description</h2>
+            <div class="input-toggle">
+                <label><input type="radio" name="job_input_type" value="text" checked> Text Input</label>
+                <label><input type="radio" name="job_input_type" value="file"> File Upload</label>
+            </div>
 
-    <!-- Resume Upload Form -->
-    <form action="/upload_resume" method="post" enctype="multipart/form-data">
-        <input type="file" name="resume" required>
-        <button type="submit">Upload Resume</button>
-    </form>
+            <!-- Text Input Form -->
+            <form action="/upload_job" method="post" enctype="multipart/form-data" id="jobTextForm">
+                <textarea name="job_description" placeholder="Paste job description here..." required></textarea>
+                <button type="submit"><i class="fas fa-upload"></i> Upload Job Description</button>
+            </form>
+
+            <!-- File Upload Form -->
+            <form action="/upload_job_file" method="post" enctype="multipart/form-data" id="jobFileForm" style="display:none;">
+                <input type="file" name="job_file" accept=".pdf,.docx" required>
+                <button type="submit"><i class="fas fa-upload"></i> Upload Job File</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-id-card"></i> Upload Resume</h2>
+            <form action="/upload_resume" method="post" enctype="multipart/form-data">
+                <input type="file" name="resume" accept=".pdf,.docx" required>
+                <button type="submit"><i class="fas fa-upload"></i> Upload Resume</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
 
