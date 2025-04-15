@@ -31,6 +31,7 @@
             <button type="submit">Search</button>
         </form>
 
+        <!-- Job Descriptions Section -->
         <div class="section">
             <h2><i class="fas fa-file-alt"></i> Job Descriptions History</h2>
             {% for job in jobs %}
@@ -38,22 +39,19 @@
                     <p>{{ job.content[:100] }}...</p>
                     <!-- Delete Button -->
                     <form action="{{ url_for('delete_job', job_id=job.id) }}" method="post">
-                        <button type="submit">Delete</button>
+                        <button type="submit" class="btn btn-danger">Delete Job Description</button>
                     </form>
                 </div>
             {% endfor %}
         </div>
 
+        <!-- Resumes Section -->
         <div class="section">
             <h2><i class="fas fa-id-card"></i> Resumes</h2>
             {% for resume in resumes %}
                 <div class="resume-entry">
                     <p>{{ resume.filename }}</p>
                     <p>Similarity: {{ resume.similarity_score }}%</p>
-                    <!-- Delete Button -->
-                    <form action="{{ url_for('delete_resume', resume_id=resume.id) }}" method="post">
-                        <button type="submit">Delete</button>
-                    </form>
                     <!-- Download Link -->
                     <a href="{{ url_for('static', filename='uploads/' + resume.filename) }}" download>
                         Download Resume
