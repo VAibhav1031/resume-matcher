@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Upload Your Resume</h1>
+    <h1>Upload Your Job Description and Resume</h1>
 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -17,13 +17,16 @@
       {% endif %}
     {% endwith %}
 
-    <!-- Display the Job Description here -->
-    <h2>Job Description</h2>
-    <pre>{{ job_description }}</pre>
+    <!-- Job Description Upload Form -->
+    <form action="/upload_job" method="post">
+        <textarea name="job_description" rows="10" cols="50" required placeholder="Enter or paste job description here"></textarea>
+        <button type="submit">Upload Job Description</button>
+    </form>
 
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    <!-- Resume Upload Form -->
+    <form action="/upload_resume" method="post" enctype="multipart/form-data">
         <input type="file" name="resume" required>
-        <button type="submit">Upload</button>
+        <button type="submit">Upload Resume</button>
     </form>
 </body>
 </html>
