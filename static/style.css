@@ -121,6 +121,20 @@ button:hover {
     cursor: pointer;
 }
 
+
+
+
+.job-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+
+
+
 /* Icons and Text */
 textarea {
     height: 150px;
@@ -157,38 +171,5 @@ button:hover {
     input[type="file"], textarea {
         font-size: 0.9em;
     }
-}
-
-
-/* Animation for showing/hiding forms */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-}
-
-#jobTextForm, #jobFileForm {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-/* Apply fade out animation when the form is hidden */
-#jobTextForm[style="display: none;"], #jobFileForm[style="display: none;"] {
-    animation: fadeOut 0.5s ease-in-out;
 }
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Upload History</h1>
+    <a href="/">← Back to Home</a>
+
+    {% if jobs %}
+        {% for job in jobs %}
+            <div class="job-card">
+                <h3>Job #{{ job.id }} (Uploaded: {{ job.created_at.strftime('%Y-%m-%d %H:%M') }})</h3>
+                <p>{{ job.content }}</p>
+
+                {% if job.resumes %}
+                    <ul>
+                        {% for resume in job.resumes %}
+                            <li>
+                                <strong>{{ resume.filename }}</strong> —
+                                Score: {{ resume.similarity_score | round(2) }}%
+                                <br>
+                                Uploaded at: {{ resume.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p><em>No resumes submitted yet.</em></p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No job descriptions uploaded yet.</p>
+    {% endif %}
+</body>
+</html>
+
