@@ -117,7 +117,9 @@ resume-matcher/
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! , like  i am still learning  and most of things 
+taken much time . 
+So,  Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -125,10 +127,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
 
 Created with ❤️ to simplify hiring workflows.
