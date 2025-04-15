@@ -2,38 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Upload History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matcher - History</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Upload History</h1>
-    <a href="/">← Back to Home</a>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-briefcase"></i>
+            Resume Matcher
+        </div>
+    </nav>
 
-    {% if jobs %}
-        {% for job in jobs %}
-            <div class="job-card">
-                <h3>Job #{{ job.id }} (Uploaded: {{ job.created_at.strftime('%Y-%m-%d %H:%M') }})</h3>
-                <p>{{ job.content }}</p>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
 
-                {% if job.resumes %}
-                    <ul>
-                        {% for resume in job.resumes %}
-                            <li>
-                                <strong>{{ resume.filename }}</strong> —
-                                Score: {{ resume.similarity_score | round(2) }}%
-                                <br>
-                                Uploaded at: {{ resume.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p><em>No resumes submitted yet.</em></p>
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No job descriptions uploaded yet.</p>
-    {% endif %}
+        <!-- Search Form -->
+        <form method="GET" action="/history">
+            <input type="text" name="search" placeholder="Search job descriptions..." value="{{ request.args.get('search') }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <div class="section">
+            <h2><i class="fas fa-file-alt"></i> Job Descriptions History</h2>
+            {% for job in jobs %}
+                <div class="job-entry">
+                    <p>{{ job.content[:100] }}...</p>
+                    <!-- Delete Button -->
+                    <form action="{{ url_for('delete_job', job_id=job.id) }}" method="post">
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-id-card"></i> Resumes</h2>
+            {% for resume in resumes %}
+                <div class="resume-entry">
+                    <p>{{ resume.filename }}</p>
+                    <p>Similarity: {{ resume.similarity_score }}%</p>
+                    <!-- Delete Button -->
+                    <form action="{{ url_for('delete_resume', resume_id=resume.id) }}" method="post">
+                        <button type="submit">Delete</button>
+                    </form>
+                    <!-- Download Link -->
+                    <a href="{{ url_for('static', filename='uploads/' + resume.filename) }}" download>
+                        Download Resume
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>
 
