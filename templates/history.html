@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Matcher - History</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
@@ -15,51 +16,106 @@
     </nav>
 
     <div class="container">
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="flash-messages">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
         {% endwith %}
 
         <!-- Search Form -->
-        <form method="GET" action="/history">
-            <input type="text" name="search" placeholder="Search job descriptions..." value="{{ request.args.get('search') }}">
-            <button type="submit">Search</button>
-        </form>
+        <div class="search-section">
+            <form method="GET" action="{{ url_for('history') }}" class="search-form">
+                <input type="text" name="search" placeholder="Search job descriptions..." 
+                       value="{{ request.args.get('search', '') }}">
+                <button type="submit" class="btn-search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                {% if request.args.get('search') %}
+                    <a href="{{ url_for('history') }}" class="btn-clear">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                {% endif %}
+            </form>
+        </div>
 
         <!-- Job Descriptions Section -->
         <div class="section">
             <h2><i class="fas fa-file-alt"></i> Job Descriptions History</h2>
-            {% for job in jobs %}
-                <div class="job-entry">
-                    <p>{{ job.content[:100] }}...</p>
-                    <!-- Delete Button -->
-                    <form action="{{ url_for('delete_job', job_id=job.id) }}" method="post">
-                        <button type="submit" class="btn btn-danger">Delete Job Description</button>
-                    </form>
+            {% if jobs %}
+                <div class="job-list">
+                    {% for job in jobs %}
+                        <div class="job-entry">
+                            <div class="job-content">
+                                <p>{{ job.content[:150] }}{% if job.content|length > 150 %}...{% endif %}</p>
+                                <small class="job-date">
+                                    <i class="far fa-calendar-alt"></i> 
+                                    {{ job.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                </small>
+                            </div>
+                            <form action="{{ url_for('delete_job', job_id=job.id) }}" method="POST" class="delete-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger" 
+                                        onclick="return confirm('Are you sure you want to delete this job description?')">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            {% else %}
+                <p class="no-results">No job descriptions found{% if request.args.get('search') %} for "{{ request.args.get('search') }}"{% endif %}.</p>
+            {% endif %}
         </div>
 
         <!-- Resumes Section -->
         <div class="section">
             <h2><i class="fas fa-id-card"></i> Resumes</h2>
-            {% for resume in resumes %}
-                <div class="resume-card">
-                    <p class="resume-name">{{ resume.filename }}</p>
-                    <p class="resume-score">Similarity: {{ resume.similarity_score }}%</p>
-                    <a href="{{ url_for('static', filename='uploads/' + resume.filename) }}" download class="download-btn">
-                        <i class="fas fa-download"></i> Download Resume
-                    </a>
+            {% if resumes %}
+                <div class="resume-grid">
+                    {% for resume in resumes %}
+                        <div class="resume-card">
+                            <div class="resume-header">
+                                <p class="resume-name">{{ resume.filename|truncate(25) }}</p>
+                                <div class="resume-score {% if resume.similarity_score >= 75 %}high-score{% elif resume.similarity_score >= 50 %}medium-score{% else %}low-score{% endif %}">
+                                    {{ "%.2f"|format(resume.similarity_score) }}%
+                                </div>
+                            </div>
+                            <div class="resume-meta">
+                                <small><i class="far fa-clock"></i> {{ resume.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </div>
+                            <div class="resume-actions">
+                                <a href="{{ url_for('results', resume_id=resume.id) }}" class="btn-results">
+                                    <i class="fas fa-chart-line"></i> Results
+                                </a>
+                                <a href="{{ url_for('download_resume', filename=resume.filename) }}" class="btn-download">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <form method="POST" action="{{ url_for('delete_resume', resume_id=resume.id) }}" class="delete-form">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn-danger" 
+                                            onclick="return confirm('Are you sure you want to delete this resume?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            {% else %}
+                <p class="no-results">No resumes uploaded yet.</p>
+            {% endif %}
         </div>
 
+        <!-- Back to home -->
+        <div class="section text-center">
+            <a href="{{ url_for('index') }}" class="btn-home">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+        </div>
     </div>
 </body>
 </html>
-

@@ -1,30 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Resume Matches</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .results-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        
+        .header-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .score-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .score-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .overall-score {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+        
+        .progress {
+            height: 12px;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .section-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .section-name {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .section-value {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .keyword-chip {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 0.5rem 1rem;
+            margin: 0.3rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .keyword-chip:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .visualization-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .tip-box {
+            background: #e8f4fd;
+            border-left: 4px solid var(--success-color);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>Matching Resumes</h1>
+    <div class="results-container">
+        <!-- Header -->
+        <div class="header-card">
+            <h1><i class="fas fa-chart-line"></i> Matching Results</h1>
+            <p class="text-muted">Detailed analysis of your resume match</p>
+        </div>
+        
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-6">
+                <!-- Overall Score -->
+                <div class="score-card">
+                    <h3><i class="fas fa-star"></i> Overall Match Score</h3>
+                    <div class="overall-score">{{ result.overall_score }}%</div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ result.overall_score }}%" 
+                             aria-valuenow="{{ result.overall_score }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small>0%</small>
+                        <small>100%</small>
+                    </div>
+                </div>
+                
+                <!-- Section Scores -->
+                <div class="score-card">
+                    <h3><i class="fas fa-chart-pie"></i> Section-wise Matching</h3>
+                    {% for section, score in result.section_scores.items() %}
+                    <div class="section-score">
+                        <span class="section-name">{{ section|title }}</span>
+                        <span class="section-value">{{ score }}%</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ score }}%" 
+                             aria-valuenow="{{ score }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="col-lg-6">
+                <!-- Visualization -->
+                <div class="score-card">
+                    <h3><i class="fas fa-project-diagram"></i> Visual Analysis</h3>
+                    <div class="visualization-container text-center">
+                        <img src="data:image/png;base64,{{ result.visualization }}" 
+                             alt="Matching visualization" class="img-fluid">
+                    </div>
+                </div>
+                
+                <!-- Keywords -->
+                <div class="score-card">
+                    <h3><i class="fas fa-key"></i> Matched Keywords</h3>
+                    <div class="keywords-container">
+                        {% for keyword in result.matched_keywords %}
+                        <span class="keyword-chip">{{ keyword }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="tip-box">
+                        <strong>Tip:</strong> These keywords appeared in both your resume and the job description.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Filename</th>
-                <th>Similarity Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for resume in matched_resumes %}
-            <tr>
-                <td>{{ resume.filename }}</td>
-                <td>{{ resume.score }}%</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="/">Upload another resume</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

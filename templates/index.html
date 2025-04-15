@@ -4,62 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Matcher</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <i class="fas fa-briefcase"></i>
-            Resume Matcher
-        </div>
-    </nav>
+    <div class="navbar">
+        <i class="fas fa-briefcase"></i> Resume Matcher
+    </div>
 
     <div class="container">
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="flash-messages">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
         {% endwith %}
 
+        <!-- Resume Matching Section -->
         <div class="section">
-            <h2><i class="fas fa-file-alt"></i> Upload Job Description</h2>
-            <div class="input-toggle">
-                <label><input type="radio" name="job_input_type" value="text" checked> Text Input</label>
-                <label><input type="radio" name="job_input_type" value="file"> File Upload</label>
+            <h2><i class="fas fa-clipboard-list"></i> Match Resumes</h2>
+
+            <form id="resumeMatchForm" method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                <div class="input-toggle">
+                    <label>
+                        <input type="radio" name="input-type" value="text" checked> 
+                        Paste Job Description
+                    </label>
+                    <label>
+                        <input type="radio" name="input-type" value="file"> 
+                        Upload Job Description File
+                    </label>
+                </div>
+
+                <div id="jobTextContainer">
+                    <textarea name="job_description" placeholder="Paste job description here..." required></textarea>
+                </div>
+                <div id="jobFileContainer" style="display: none;">
+                    <input type="file" name="job_file" accept=".txt,.pdf,.docx">
+                </div>
+
+                <div class="form-group">
+                    <label for="resume">Upload Resumes (PDF/DOCX):</label>
+                    <input type="file" name="resume" id="resume" accept=".pdf,.docx" multiple required>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-search"></i> Match Resumes
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if resumes %}
+        <div class="section">
+            <h2><i class="fas fa-chart-bar"></i> Latest Results</h2>
+            <div class="results-grid">
+                {% for resume in resumes[:3] %}
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-filename">{{ resume.filename|truncate(20) }}</span>
+                        <span class="result-score">{{ "%.1f"|format(resume.similarity_score) }}%</span>
+                    </div>
+                    <a href="{{ url_for('results', resume_id=resume.id) }}" class="btn-results">
+                        <i class="fas fa-chart-line"></i> View Details
+                    </a>
+                </div>
+                {% endfor %}
             </div>
-
-            <!-- Text Input Form -->
-            <form action="/upload_job" method="post" enctype="multipart/form-data" id="jobTextForm">
-                <textarea name="job_description" placeholder="Paste job description here..." required></textarea>
-                <button type="submit"><i class="fas fa-upload"></i> Upload Job Description</button>
-            </form>
-
-            <!-- File Upload Form -->
-            <form action="/upload_job_file" method="post" enctype="multipart/form-data" id="jobFileForm" style="display:none;">
-                <input type="file" name="job_file" accept=".pdf,.docx" required>
-                <button type="submit"><i class="fas fa-upload"></i> Upload Job File</button>
-            </form>
         </div>
+        {% endif %}
 
         <div class="section">
-            <h2><i class="fas fa-id-card"></i> Upload Resume</h2>
-            <form action="/upload_resume" method="post" enctype="multipart/form-data">
-                <input type="file" name="resume" accept=".pdf,.docx" required>
-                <button type="submit"><i class="fas fa-upload"></i> Upload Resume</button>
-            </form>
-        </div>
-
-        <!-- Link to history page -->
-        <div class="section">
-            <a href="/history" class="btn-history"><i class="fas fa-history"></i> View Job Descriptions History</a>
+            <a href="{{ url_for('history') }}" class="btn-history">
+                <i class="fas fa-history"></i> View Full History
+            </a>
         </div>
     </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-
