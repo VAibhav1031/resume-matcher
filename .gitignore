@@ -11,3 +11,4 @@ static/uploads
 # Virtual environments
 .venv
 
+instance/matcher.db
