@@ -17,39 +17,35 @@
     font-size: 1.1rem;
 }
 
+/* Applying the same blue color */
+:root {
+    --primary-blue: #007bff;
+    --secondary-blue: #0056b3;
+    --border: #ccc;
+    --shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+    --success: #28a745;
+    --danger: #dc3545;
+    --text-light: #aaa;
+}
+
+/* Glowing section headers */
+h2 {
+    font-size: 1.5rem;
+    color: var(--primary-blue);
+    text-shadow: 0 0 8px var(--primary-blue), 0 0 10px var(--primary-blue);
+}
+
+/* Job List */
 .job-list {
     display: grid;
     gap: 1.5rem;
     margin-bottom: 3rem;
 }
 
-.job-entry {
-    background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-}
-
-.job-entry:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-}
-
-.job-content {
-    margin-bottom: 1.5rem;
-}
-
-.job-date {
-    color: var(--text-light);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
+/* Adjusting resume card section width */
 .resume-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));  /* Increased the min width of cards */
     gap: 2rem;
 }
 
@@ -70,7 +66,7 @@
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(to bottom, var(--primary), var(--secondary));
+    background: linear-gradient(to bottom, var(--primary-blue), var(--secondary-blue));
     transition: width 0.3s ease;
 }
 
@@ -95,6 +91,7 @@
     font-size: 1.2rem;
 }
 
+/* Score Bubbles */
 .resume-score {
     font-weight: 700;
     padding: 0.5rem 1rem;
@@ -103,6 +100,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* High, Medium, Low Score Colors */
 .high-score {
     background: linear-gradient(135deg, #d4edda, #a8e6b3);
     color: #155724;
@@ -118,21 +116,55 @@
     color: #721c24;
 }
 
+/* Resume Actions */
 .resume-actions {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     margin-top: 1.5rem;
 }
 
+/* Shiny Neon Buttons */
 .btn-download {
     background: linear-gradient(135deg, var(--success), #218838);
     color: white;
     flex: 1;
+    padding: 1rem 2rem;  /* Added padding to make the button wider */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* 3D effect */
+    transition: all 0.3s ease;
 }
 
 .btn-danger {
     background: linear-gradient(135deg, var(--danger), #c82333);
     color: white;
-    padding: 1rem;
+    padding: 1rem 2rem;  /* Added padding to make the button wider */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* 3D effect */
     min-width: 50px;
+    transition: all 0.3s ease;
 }
+
+/* Neon Glow Effect for Buttons */
+.btn-download:hover {
+    background: linear-gradient(135deg, #39ff14, #2cff00);
+    box-shadow: 0 0 12px #39ff14, 0 0 25px #39ff14;
+    transform: translateY(-3px);  /* 3D hover effect */
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+    box-shadow: 0 0 12px #ff1a1a, 0 0 25px #ff4d4d;
+    transform: translateY(-3px);  /* 3D hover effect */
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+    .resume-card {
+        width: 100%;
+    }
+
+    .resume-header {
+        flex-direction: column;
+    }
+}
+

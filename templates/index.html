@@ -1,15 +1,18 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Matcher</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
+    <!-- Navbar -->
     <div class="navbar">
         <i class="fas fa-briefcase"></i> Resume Matcher
     </div>
@@ -28,7 +31,6 @@
         <!-- Resume Matching Section -->
         <div class="section">
             <h2><i class="fas fa-clipboard-list"></i> Match Resumes</h2>
-
             <form id="resumeMatchForm" method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
@@ -81,6 +83,7 @@
         </div>
         {% endif %}
 
+        <!-- History Section -->
         <div class="section">
             <a href="{{ url_for('history') }}" class="btn-history">
                 <i class="fas fa-history"></i> View Full History
@@ -90,4 +93,6 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
 </html>
+
