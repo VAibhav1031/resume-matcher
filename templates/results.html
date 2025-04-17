@@ -3,123 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matching Results</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Resume Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='basic.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --success-color: #4cc9f0;
-            --light-bg: #f8f9fa;
-            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
+        /* Results page specific styles */
         .results-container {
             max-width: 1200px;
             margin: 2rem auto;
-            padding: 2rem;
+            padding: 1.5rem;
         }
         
         .header-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem 2rem;
             margin-bottom: 2rem;
             text-align: center;
-            border-top: 4px solid var(--primary-color);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="rgba(255,255,255,0.03)" width="50" height="50" x="0" y="0"/><rect fill="rgba(255,255,255,0.03)" width="50" height="50" x="50" y="50"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header-card h1 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-card p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-bottom: 0;
         }
         
         .score-card {
             background: white;
             border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid var(--border);
         }
         
         .score-card:hover {
             transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .score-card h3 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .overall-score {
             font-size: 3.5rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--primary);
             margin: 1rem 0;
+            text-align: center;
         }
         
         .progress {
-            height: 12px;
-            border-radius: 6px;
-            margin: 1.5rem 0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 0.5rem 0 1.5rem;
+            background-color: var(--bg);
+            overflow: hidden;
         }
         
         .progress-bar {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
         }
         
         .section-score {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         
         .section-name {
-            font-weight: 600;
-            color: #495057;
+            font-weight: 500;
+            color: var(--text);
         }
         
         .section-value {
-            font-weight: 700;
-            color: var(--primary-color);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .keywords-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
         }
         
         .keyword-chip {
-            display: inline-block;
-            background: #e9ecef;
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg);
             padding: 0.5rem 1rem;
-            margin: 0.3rem;
             border-radius: 20px;
             font-weight: 500;
-            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: var(--text);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+        
+        .score-range {
+            display: flex;
+            justify-content: space-between;
+            margin-top: -1rem;
+        }
+        
+        .score-range small {
+            color: var(--text-light);
+        }
+        
+        .viz-caption {
+            display: block;
+            margin-top: 0.5rem;
+            color: var(--text-light);
         }
         
         .keyword-chip:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: scale(1.05);
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-3px);
+            border-color: var(--primary-light);
         }
         
         .visualization-container {
             background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
             position: relative;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .visualization-container img {
+            max-width: 100%;
+            border-radius: 4px;
+            transition: var(--transition);
         }
         
         .visualization-container:hover {
-            transform: scale(1.02);
+            border-color: var(--primary-light);
         }
         
+        .visualization-container:hover img {
+            transform: scale(1.02);
+        }
+
         .tip-box {
-            background: #e8f4fd;
-            border-left: 4px solid var(--success-color);
-            padding: 1rem;
+            background: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 1rem 1.25rem;
             border-radius: 0 8px 8px 0;
             margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .tip-box strong {
+            color: var(--secondary-dark);
         }
 
         /* Lightbox styles */
@@ -130,18 +204,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.85);
             z-index: 1000;
             text-align: center;
-            padding-top: 5%;
+            padding: 2%;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
         }
-        
+
         .lightbox img {
             max-width: 90%;
             max-height: 90%;
-            border: 3px solid white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+            box-shadow: var(--shadow-lg);
+            object-fit: contain;
         }
         
         .close-lightbox {
@@ -151,24 +228,90 @@
             color: white;
             font-size: 40px;
             cursor: pointer;
+            transition: var(--transition);
+            opacity: 0.7;
+            z-index: 1001;
+        }
+        
+        .close-lightbox:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        /* Grid layout */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        /* Back button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #06d6a0; /* Bright teal color */
+            color: #2b2d42;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .back-button:hover {
+            background: #04c494;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .overall-score {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">
+            <i class="fas fa-briefcase"></i> Resume Matcher
+        </a>
+        <div class="navbar-links">
+            <a href="{{ url_for('history') }}" class="navbar-link">
+                <i class="fas fa-history"></i> History
+            </a>
+        </div>
+    </nav>
+    
     <div class="results-container">
         <!-- Header -->
         <div class="header-card">
-            <h1><i class="fas fa-chart-line"></i> Matching Results</h1>
-            <p class="text-muted">Detailed analysis of your resume match</p>
+            <h1><i class="fas fa-chart-line"></i> Resume Analysis Results</h1>
+            <p>Detailed analysis of how well your resume matches the job description</p>
         </div>
         
-        <div class="row">
+        <div class="results-grid">
             <!-- Left Column -->
-            <div class="col-lg-6">
+            <div>
                 <!-- Overall Score -->
                 <div class="score-card">
                     <h3><i class="fas fa-star"></i> Overall Match Score</h3>
-                    <div class="overall-score">{{ result.overall_score|round(2) }}%</div>
+                    <div class="overall-score" {% if result.overall_score >= 75 %}style="color: var(--success)"{% elif result.overall_score >= 50 %}style="color: var(--warning)"{% else %}style="color: var(--danger)"{% endif %}>{{ result.overall_score }}%</div>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" 
                              style="width: {{ result.overall_score }}%" 
@@ -176,7 +319,7 @@
                              aria-valuemin="0" 
                              aria-valuemax="100"></div>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="score-range">
                         <small>0%</small>
                         <small>100%</small>
                     </div>
@@ -190,7 +333,7 @@
                         <span class="section-name">{{ section|title }}</span>
                         <span class="section-value">{{ score }}%</span>
                     </div>
-                    <div class="progress" style="height: 6px;">
+                    <div class="progress">
                         <div class="progress-bar" role="progressbar" 
                              style="width: {{ score }}%" 
                              aria-valuenow="{{ score }}" 
@@ -198,18 +341,22 @@
                              aria-valuemax="100"></div>
                     </div>
                     {% endfor %}
+                    
+                    <div class="tip-box">
+                        <strong>Pro Tip:</strong> Focus on improving sections with lower match scores to increase your overall compatibility with this job.
+                    </div>
                 </div>
             </div>
             
             <!-- Right Column -->
-            <div class="col-lg-6">
+            <div>
                 <!-- Visualization -->
                 <div class="score-card">
                     <h3><i class="fas fa-project-diagram"></i> Visual Analysis</h3>
-                    <div class="visualization-container text-center" onclick="openLightbox('{{ result.visualization }}')">
+                    <div class="visualization-container" onclick="openLightbox('{{ result.visualization }}')">
                         <img src="data:image/png;base64,{{ result.visualization }}" 
-                             alt="Matching visualization" class="img-fluid">
-                        <small class="text-muted">Click to zoom</small>
+                             alt="Matching visualization">
+                        <small class="viz-caption">Click to enlarge</small>
                     </div>
                 </div>
                 
@@ -222,15 +369,26 @@
                         {% endfor %}
                     </div>
                     <div class="tip-box">
-                        <strong>Tip:</strong> These keywords appeared in both your resume and the job description.
+                        <strong>Tip:</strong> These keywords appeared in both your resume and the job description. Make sure to highlight them in your cover letter as well.
                     </div>
                 </div>
             </div>
         </div>
         
+        <!-- Recommendations Section -->
+        <div class="score-card">
+            <h3><i class="fas fa-lightbulb"></i> Improvement Recommendations</h3>
+            <ul style="padding-left: 1.5rem;">
+                <li>Include more specific skills and technologies mentioned in the job description</li>
+                <li>Quantify your achievements with metrics and numbers</li>
+                <li>Tailor your professional summary to match the job requirements</li>
+                <li>Use industry-specific terminology that appears in the job posting</li>
+            </ul>
+        </div>
+        
         <!-- Back Button -->
-        <div class="text-center mt-4">
-            <a href="{{ url_for('index') }}" class="btn btn-primary">
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('index') }}" class="back-button">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </a>
         </div>
@@ -241,8 +399,6 @@
         <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
         <img id="lightbox-img" src="">
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
         function openLightbox(imageData) {

@@ -1,64 +1,89 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Matcher</title>
+    <title>Resume Matcher - AI-Powered Resume Analysis</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <!-- Navbar -->
-    <div class="navbar">
-        <i class="fas fa-briefcase"></i> Resume Matcher
-    </div>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">
+            <i class="fas fa-briefcase"></i> Resume Matcher
+        </a>
+        <div class="navbar-links">
+            <a href="{{ url_for('history') }}" class="navbar-link">
+                <i class="fas fa-history"></i> History
+            </a>
+        </div>
+    </nav>
 
     <div class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="flash-messages">
                     {% for category, message in messages %}
-                        <li class="{{ category }}">{{ message }}</li>
+                        <li class="{{ category }}">
+                            {% if category == 'success' %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-exclamation-circle"></i>{% endif %}
+                            {{ message }}
+                        </li>
                     {% endfor %}
                 </ul>
             {% endif %}
         {% endwith %}
+        
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>AI-Powered Resume Matching</h1>
+            <p>Upload your resume and job description to get detailed insights on how well they match and receive personalized recommendations.</p>
+        </div>
 
         <!-- Resume Matching Section -->
         <div class="section">
-            <h2><i class="fas fa-clipboard-list"></i> Match Resumes</h2>
+            <h2><i class="fas fa-clipboard-list"></i> Match Your Resume</h2>
             <form id="resumeMatchForm" method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
                 <div class="input-toggle">
                     <label>
                         <input type="radio" name="input-type" value="text" checked> 
-                        Paste Job Description
+                        <i class="fas fa-keyboard"></i> Paste Job Description
                     </label>
                     <label>
                         <input type="radio" name="input-type" value="file"> 
-                        Upload Job Description File
+                        <i class="fas fa-file-upload"></i> Upload Job Description File
                     </label>
                 </div>
 
                 <div id="jobTextContainer">
-                    <textarea name="job_description" placeholder="Paste job description here..." required></textarea>
+                    <textarea name="job_description" placeholder="Paste the job description here to match against your resume..." required></textarea>
+                    <small>For best results, include the complete job description with all requirements and qualifications.</small>
                 </div>
+                
                 <div id="jobFileContainer" style="display: none;">
-                    <input type="file" name="job_file" accept=".txt,.pdf,.docx">
+                    <div class="file-upload-area">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Upload a job description file</p>
+                        <small>Supported formats: TXT, PDF, DOCX</small>
+                        <input type="file" name="job_file" accept=".txt,.pdf,.docx">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="resume">Upload Resumes (PDF/DOCX):</label>
+                    <label for="resume"><i class="fas fa-file-pdf"></i> Upload Resumes (PDF/DOCX):</label>
+                    <p class="text-light">You can upload multiple resumes to compare them against the job description.</p>
                     <input type="file" name="resume" id="resume" accept=".pdf,.docx" multiple required>
                 </div>
 
-                <button type="submit" class="btn-primary">
-                    <i class="fas fa-search"></i> Match Resumes
+                <button type="submit" class="btn-match">
+                    <i class="fas fa-bolt"></i> Match Resumes
                 </button>
             </form>
         </div>
@@ -72,19 +97,36 @@
                 <div class="result-card">
                     <div class="result-header">
                         <span class="result-filename">{{ resume.filename|truncate(20) }}</span>
-                        <span class="result-score">{{ "%.1f"|format(resume.similarity_score) }}%</span>
+                        {% if resume.similarity_score >= 75 %}
+                            <span class="result-score high">{{ "%.1f"|format(resume.similarity_score) }}%</span>
+                        {% elif resume.similarity_score >= 50 %}
+                            <span class="result-score medium">{{ "%.1f"|format(resume.similarity_score) }}%</span>
+                        {% else %}
+                            <span class="result-score low">{{ "%.1f"|format(resume.similarity_score) }}%</span>
+                        {% endif %}
                     </div>
                     <a href="{{ url_for('results', resume_id=resume.id) }}" class="btn-results">
-                        <i class="fas fa-chart-line"></i> View Details
+                        <i class="fas fa-chart-line"></i> View Detailed Analysis
                     </a>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="section">
+            <div class="empty-state">
+                <i class="fas fa-file-search pulse"></i>
+                <h3>No Resume Matches Yet</h3>
+                <p>Upload your resume and a job description above to see how well they match and get detailed insights.</p>
             </div>
         </div>
         {% endif %}
 
         <!-- History Section -->
         <div class="section">
+            <h2><i class="fas fa-history"></i> Previous Matches</h2>
+            <p>View your previous resume matches and job descriptions.</p>
             <a href="{{ url_for('history') }}" class="btn-history">
                 <i class="fas fa-history"></i> View Full History
             </a>

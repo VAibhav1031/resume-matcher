@@ -11,11 +11,11 @@ import re
 import seaborn as sns
 from typing import Dict, List, Optional, Tuple
 
-# Initialize logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize the model
+#  model  is here  brooo !!!!
 MODEL = SentenceTransformer("all-mpnet-base-v2")  # Best general-purpose model
 
 
@@ -28,11 +28,13 @@ def get_embeddings(text: str) -> np.ndarray:
         raise
 
 
+#  main thing here also where we do cosine similarity  for  things to  compre
 def compute_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
     """Compute cosine similarity between embeddings"""
     try:
         similarity = cosine_similarity(
-            np.array(embedding1).reshape(1, -1), np.array(embedding2).reshape(1, -1)
+            np.array(embedding1).reshape(
+                1, -1), np.array(embedding2).reshape(1, -1)
         )
         return round(similarity[0][0] * 100, 2)
     except Exception as e:
@@ -57,7 +59,8 @@ def extract_section(text: str, section_name: str) -> Optional[str]:
     """Extract specific section from resume text with improved parsing"""
     try:
         match = re.search(
-            rf"(?i)\b{section_name}\b[:\-]*\s*(.*?)(?=\n\s*\n|\Z)", text, re.DOTALL
+            rf"(?i)\b{
+                section_name}\b[:\-]*\s*(.*?)(?=\n\s*\n|\Z)", text, re.DOTALL
         )
         return match.group(1).strip() if match else None
     except Exception as e:
@@ -65,6 +68,7 @@ def extract_section(text: str, section_name: str) -> Optional[str]:
         return None
 
 
+# main visualization part
 def generate_visualization(
     overall_score: float, section_scores: Dict[str, float], matched_keywords: List[str]
 ) -> str:
@@ -89,7 +93,8 @@ def generate_visualization(
         ax.axis("off")
 
         # Draw outer circle
-        outer = Circle((0.5, 0.5), 0.4, color="lightgray", fill=False, linewidth=10)
+        outer = Circle((0.5, 0.5), 0.4, color="lightgray",
+                       fill=False, linewidth=10)
         ax.add_patch(outer)
 
         # Draw colored wedge
@@ -183,7 +188,8 @@ def match_resume_to_job(resume_text: str, job_text: str) -> Dict[str, any]:
         for name, section_text in sections.items():
             if section_text:
                 section_emb = get_embeddings(section_text)
-                section_scores[name] = compute_cosine_similarity(section_emb, job_emb)
+                section_scores[name] = compute_cosine_similarity(
+                    section_emb, job_emb)
 
         # Keyword matching
         resume_keywords = set(extract_keywords(resume_text, n=20))
