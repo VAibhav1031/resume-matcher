@@ -12,3 +12,4 @@ static/uploads
 .venv
 
 instance/matcher.db
+instance/matcher.db

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Analysis Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -295,6 +296,10 @@
             <a href="{{ url_for('history') }}" class="navbar-link">
                 <i class="fas fa-history"></i> History
             </a>
+            <button onclick="toggleTheme()" class="theme-toggle" title="Toggle dark/light mode">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
         </div>
     </nav>
     
@@ -314,7 +319,7 @@
                     <div class="overall-score" {% if result.overall_score >= 75 %}style="color: var(--success)"{% elif result.overall_score >= 50 %}style="color: var(--warning)"{% else %}style="color: var(--danger)"{% endif %}>{{ result.overall_score }}%</div>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" 
-                             style="width: {{ result.overall_score }}%" 
+                             data-width="{{ result.overall_score }}"
                              aria-valuenow="{{ result.overall_score }}" 
                              aria-valuemin="0" 
                              aria-valuemax="100"></div>
@@ -335,7 +340,7 @@
                     </div>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" 
-                             style="width: {{ score }}%" 
+                             data-width="{{ score }}"
                              aria-valuenow="{{ score }}" 
                              aria-valuemin="0" 
                              aria-valuemax="100"></div>
@@ -397,10 +402,20 @@
     <!-- Lightbox overlay -->
     <div id="lightbox" class="lightbox">
         <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
-        <img id="lightbox-img" src="">
+        <img id="lightbox-img" src="" alt="Lightbox image">
     </div>
     
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply progress bar widths from data attributes
+            document.querySelectorAll('.progress-bar').forEach(function(bar) {
+                const width = bar.getAttribute('data-width');
+                if (width) {
+                    bar.style.width = width + '%';
+                }
+            });
+        });
+        
         function openLightbox(imageData) {
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightbox-img');
@@ -429,5 +444,6 @@
             }
         };
     </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

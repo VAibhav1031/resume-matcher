@@ -1,30 +1,50 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//     const jobTextForm = document.getElementById("jobTextForm");
-//     const jobFileForm = document.getElementById("jobFileForm");
-//
-//     // Toggle visibility of forms
-//     function toggleInput() {
-//         const jobInputType = document.querySelector('input[name="job_input_type"]:checked').value;
-//
-//         if (jobInputType === "text") {
-//             jobTextForm.style.display = "block";
-//             jobFileForm.style.display = "none";
-//         } else if (jobInputType === "file") {
-//             jobTextForm.style.display = "none";
-//             jobFileForm.style.display = "block";
-//         }
-//     }
-//
-//     toggleInput();
-//
-//     // Event listener for radio buttons
-//     const radios = document.querySelectorAll('input[name="job_input_type"]');
-//     radios.forEach((radio) => {
-//         radio.addEventListener("change", toggleInput);
-//     });
-// });
-//
-//
+// Theme functionality
+document.addEventListener("DOMContentLoaded", () => {
+    // Initialize theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Update toggle button icon based on current theme
+    updateThemeToggleIcon(savedTheme);
+});
+
+// Toggle theme function
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Set the theme attribute on html element
+    document.documentElement.setAttribute('data-theme', newTheme);
+    
+    // Save theme preference to localStorage
+    localStorage.setItem('theme', newTheme);
+    
+    // Update toggle button icon
+    updateThemeToggleIcon(newTheme);
+}
+
+// Update theme toggle icon based on current theme
+function updateThemeToggleIcon(theme) {
+    const themeToggles = document.querySelectorAll('.theme-toggle');
+    themeToggles.forEach(toggle => {
+        const moonIcon = toggle.querySelector('.fa-moon');
+        const sunIcon = toggle.querySelector('.fa-sun');
+        
+        if (theme === 'dark') {
+            moonIcon.style.opacity = '0';
+            moonIcon.style.transform = 'translateY(-20px) rotate(-90deg)';
+            sunIcon.style.opacity = '1';
+            sunIcon.style.transform = 'translateY(0) rotate(0)';
+        } else {
+            moonIcon.style.opacity = '1';
+            moonIcon.style.transform = 'translateY(0) rotate(0)';
+            sunIcon.style.opacity = '0';
+            sunIcon.style.transform = 'translateY(20px) rotate(90deg)';
+        }
+    });
+}
+
+// Form toggle functionality
 const radioButtons = document.querySelectorAll('input[name="input-type"]');
 const jobTextContainer = document.getElementById('jobTextContainer');
 const jobFileContainer = document.getElementById('jobFileContainer');

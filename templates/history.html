@@ -7,6 +7,7 @@
    
     <link rel="stylesheet" href="{{ url_for('static', filename='basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='history.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -380,6 +381,10 @@
             <a href="{{ url_for('index') }}" class="navbar-link">
                 <i class="fas fa-home"></i> Home
             </a>
+            <button onclick="toggleTheme()" class="theme-toggle" title="Toggle dark/light mode">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
         </div>
     </nav>
 
@@ -503,5 +508,6 @@
             </a>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
