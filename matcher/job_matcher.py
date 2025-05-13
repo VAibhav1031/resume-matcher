@@ -30,7 +30,7 @@ def get_embeddings(text: str) -> np.ndarray:
 
 #  main thing here also where we do cosine similarity  for  things to  compre
 def compute_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
-    """Compute cosine similarity between embeddings"""
+    # compute Cosine similarity is mostly used, her we are  doing simple  things is to compare the embeddings value from jon description to resume 
     try:
         similarity = cosine_similarity(
             np.array(embedding1).reshape(
@@ -42,8 +42,12 @@ def compute_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) ->
         raise
 
 
+
+# extraction of the Keyword 
 def extract_keywords(text: str, n: int = 10) -> List[str]:
-    """Extract top keywords using TF-IDF"""
+    """Extract top keywords using TF-IDF
+    Mostly you see this  
+    """
     try:
         vectorizer = TfidfVectorizer(stop_words="english", max_features=5000)
         tfidf = vectorizer.fit_transform([text])
